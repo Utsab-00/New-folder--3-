@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FairBook – Book Ticket</title>
+</head>
+<body>
+    <h2>Book Your Ticket</h2>
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}    
+    <form action="/book/" method="post">
+        {% csrf_token %}
+        <label>User ID:</label><br>
+        <input type="text" name="user_id" required><br><br>
+
+        <label>Event ID:</label><br>
+        <input type="text" name="event_id" required><br><br>
+
+        <label>Seat Number:</label><br>
+        <input type="text" name="seat" required><br><br>
+
+        <button type="submit">Book Now</button>
+    </form>
+</body>
+</html>

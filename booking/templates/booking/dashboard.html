@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FairBook – Dashboard</title>
+</head>
+<body>
+    <h2>Your Bookings</h2>
+    {% if bookings %}
+        <ul>
+        {% for booking in bookings %}
+            <li>
+                <strong>Event:</strong> {{ booking.event.name }}<br>
+                <strong>Seat:</strong> {{ booking.seat }}<br>
+                <strong>Token:</strong> {{ booking.token }}<br>
+                <img src="/{{ booking.qr_path }}" width="150"><br><br>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No bookings found.</p>
+    {% endif %}
+</body>
+</html>
