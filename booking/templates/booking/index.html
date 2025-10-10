@@ -13,19 +13,10 @@
             <div class="card-body">
                 <form method="post">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        {{ form.user.label_tag }}
-                        {{ form.user }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.event.label_tag }}
-                        {{ form.event }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form.seat.label_tag }}
-                        {{ form.seat }}
-                    </div>
-                    <button type="submit" class="btn btn-success">Book Ticket</button>
+                    {{ form.user.label_tag }} {{ form.user }}
+                    {{ form.event.label_tag }} {{ form.event }}
+                    {{ form.seat.label_tag }} {{ form.seat }}
+                    <button type="submit" class="btn btn-success mt-3">Book Ticket</button>
                 </form>
             </div>
         </div>

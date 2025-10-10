@@ -18,7 +18,7 @@ def book_ticket(request):
             return redirect('dashboard')
     else:
         form = BookingForm()
-    return render(request, 'index.html', {'form': form})
+    return render(request, 'booking/index.html', {'form': form})
 
 
 def dashboard(request):
