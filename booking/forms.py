@@ -1,6 +1,12 @@
 from django import forms
+from .models import Booking
 
-class BookingForm(forms.Form):
-    user_id = forms.IntegerField()
-    event_id = forms.IntegerField()
-    seat = forms.CharField(max_length=10)
+class BookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['user', 'event', 'seat']
+        widgets = {
+            'user': forms.Select(attrs={'class': 'form-control'}),
+            'event': forms.Select(attrs={'class': 'form-control'}),
+            'seat': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. A3'}),
+        }

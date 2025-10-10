@@ -11,43 +11,15 @@ def book_ticket(request):
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
-            try:
-                user = User.objects.get(id=form.cleaned_data['user_id'])
-            except ObjectDoesNotExist:
-                return render(request, 'booking/index.html', {
-                    'form': form,
-                    'error': 'User not found. Please enter a valid User ID.'
-                })
-
-            try:
-                event = Event.objects.get(id=form.cleaned_data['event_id'])
-            except ObjectDoesNotExist:
-                return render(request, 'booking/index.html', {
-                    'form': form,
-                    'error': 'Event not found. Please enter a valid Event ID.'
-                })
-
-            seat = form.cleaned_data['seat']
-            token = generate_token(user.id, event.id, seat)
-            qr_path = generate_qr(token)
-
-            Booking.objects.create(
-                user=user,
-                event=event,
-                seat=seat,
-                token=token,
-                qr_path=qr_path
-            )
-
+            booking = form.save(commit=False)
+            booking.token = generate_token(booking.user, booking.event, booking.seat)
+            booking.qr_path = generate_qr(booking.token)
+            booking.save()
             return redirect('dashboard')
+    else:
+        form = BookingForm()
+    return render(request, 'index.html', {'form': form})
 
-        else:
-            return render(request, 'booking/index.html', {
-                'form': form,
-                'error': 'Form is invalid. Please check your input.'
-            })
-
-    return redirect('index')
 
 def dashboard(request):
     bookings = Booking.objects.all()
