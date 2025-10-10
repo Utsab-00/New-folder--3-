@@ -4,6 +4,8 @@ from .models import Booking, Event, User
 from .forms import BookingForm
 from django.contrib import messages
 from .utils import generate_token, generate_qr
+
+# Index page
 def index(request):
     return render(request, 'booking/index.html')
 
@@ -13,16 +15,25 @@ def book_ticket(request):
         form = BookingForm(request.POST)
         if form.is_valid():
             booking = form.save(commit=False)
+
+            # 🔍 Check for duplicate seat before generating token/QR
+            existing = Booking.objects.filter(event=booking.event, seat=booking.seat).exists()
+            if existing:
+                messages.error(request, "❌ Seat already booked for this event.")
+                return redirect('booking')
+
+            # ✅ Safe to proceed
             booking.token = generate_token(booking.user, booking.event, booking.seat)
             booking.qr_path = generate_qr(booking.token)
             booking.save()
+
             messages.success(request, "✅ Ticket booked successfully!")
             return redirect('dashboard')
     else:
         form = BookingForm()
     return render(request, 'booking/index.html', {'form': form})
 
-
+# Dashboard page
 def dashboard(request):
     bookings = Booking.objects.all()
     return render(request, 'booking/dashboard.html', {'bookings': bookings})
