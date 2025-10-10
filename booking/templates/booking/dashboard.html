@@ -4,20 +4,45 @@
     <title>FairBook – Dashboard</title>
 </head>
 <body>
-    <h2>Your Bookings</h2>
-    {% if bookings %}
-        <ul>
-        {% for booking in bookings %}
-            <li>
-                <strong>Event:</strong> {{ booking.event.name }}<br>
-                <strong>Seat:</strong> {{ booking.seat }}<br>
-                <strong>Token:</strong> {{ booking.token }}<br>
-                <img src="/{{ booking.qr_path }}" width="150"><br><br>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No bookings found.</p>
-    {% endif %}
+<h2>Your Bookings</h2>
+
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if bookings %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Seat</th>
+        <th>Token</th>
+        <th>QR Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in bookings %}
+        <tr>
+          <td>{{ booking.event.title }}</td>
+          <td>{{ booking.seat }}</td>
+          <td>{{ booking.token }}</td>
+          <td>
+            {% if booking.qr_path %}
+              <img src="{{ booking.qr_path.url }}" alt="QR Code" width="100">
+            {% else %}
+              No QR
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No bookings found.</p>
+{% endif %}
 </body>
 </html>
