@@ -3,20 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>FairBook – Dashboard</title>
+    <!-- ✅ Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'home' %}">FairBook</a>
-    <div class="navbar-nav ms-auto">
-      <span class="navbar-text text-white me-3">Welcome, {{ user.username }}</span>
-      <a class="btn btn-outline-light btn-sm me-2" href="{% url 'book_ticket' %}">Book Ticket</a>
-      <a class="btn btn-outline-light btn-sm" href="{% url 'logout' %}">Logout</a>
-    </div>
-  </div>
-</nav>
 
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
@@ -27,7 +17,7 @@
       {% if messages %}
         <div class="mb-3">
           {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            <div class="alert alert-success">{{ message }}</div>
           {% endfor %}
         </div>
       {% endif %}
@@ -41,8 +31,6 @@
                 <th>Seat</th>
                 <th>Token</th>
                 <th>QR Code</th>
-                <th>Download Status</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -50,27 +38,12 @@
               <tr>
                 <td>{{ booking.event.title }}</td>
                 <td>{{ booking.seat }}</td>
-                <td style="font-size: 10px;">{{ booking.token|truncatechars:30 }}</td>
+                <td>{{ booking.token }}</td>
                 <td>
                   {% if booking.qr_path %}
-                    <img src="{{ booking.qr_path.url }}" alt="QR Code" width="80">
+                    <img src="{{ booking.qr_path.url }}" alt="QR Code" width="100">
                   {% else %}
                     No QR
-                  {% endif %}
-                </td>
-                <td>
-                  {% if booking.download_count > 0 %}
-                    <span class="badge bg-success">Downloaded {{ booking.download_count }}/3</span><br>
-                    <small class="text-muted">{{ booking.last_downloaded|date:"M d, Y H:i" }}</small>
-                  {% else %}
-                    <span class="badge bg-secondary">Not Yet</span>
-                  {% endif %}
-                </td>
-                <td>
-                  {% if booking.download_count < 3 %}
-                    <a href="{% url 'download_ticket' booking.id %}" class="btn btn-primary btn-sm">Download PDF</a>
-                  {% else %}
-                    <button class="btn btn-secondary btn-sm" disabled>Limit Reached</button>
                   {% endif %}
                 </td>
               </tr>
@@ -79,10 +52,7 @@
           </table>
         </div>
       {% else %}
-        <div class="text-center mt-5">
-          <p class="text-muted">No bookings found.</p>
-          <a href="{% url 'book_ticket' %}" class="btn btn-primary">Book Your First Ticket</a>
-        </div>
+        <p class="text-muted text-center">No bookings found.</p>
       {% endif %}
 
     </div>

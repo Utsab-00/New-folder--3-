@@ -1,6 +1,9 @@
 from django.db import models
 from django.utils.timezone import now
-from django.contrib.auth.models import User
+
+class User(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
 
 class Event(models.Model):
     name = models.CharField(max_length=200)
@@ -18,19 +21,6 @@ class Booking(models.Model):
     token = models.CharField(max_length=255)
     qr_path = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
     timestamp = models.DateTimeField(default=now)
-    download_count = models.IntegerField(default=0)
-    last_downloaded = models.DateTimeField(null=True, blank=True)
-
-    class Meta:
-        unique_together = ['event', 'seat']
 
     def __str__(self):
-        return f"{self.user.username} - {self.event} - {self.seat}"
-
-class DownloadLog(models.Model):
-    booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
-    ip_address = models.GenericIPAddressField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.booking} - {self.timestamp}"
+        return f"{self.user} - {self.event} - {self.seat}"
