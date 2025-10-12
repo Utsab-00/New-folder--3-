@@ -11,53 +11,85 @@
 <div class="container-fluid mt-4">
   <div class="row justify-content-center">
     <div class="col-lg-10 col-md-12">
-
       <h2 class="text-center mb-4">Your Bookings</h2>
+        {% if messages %}
+          <div class="mb-3">
+            {% for message in messages %}
+              <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
 
-      {% if messages %}
-        <div class="mb-3">
-          {% for message in messages %}
-            <div class="alert alert-success">{{ message }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
+        {% if bookings %}
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead class="table-dark">
+                <tr>
+                  <th>Event</th>
+                  <th>Seat</th>
+                  <th>Token</th>
+                  <th>QR Code</th>
+                  <th>Download</th>
+                  <th>Status</th>
+                  <th>Download Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for booking in bookings %}
+                <tr>
+                  <td>{{ booking.event.title }}</td>
+                  <td>{{ booking.seat }}</td>
+                  <td>{{ booking.token }}</td>
+                  <td>
+                    {% if booking.qr_path %}
+                      <img src="{{ booking.qr_path.url }}" alt="QR Code" width="100">
+                    {% else %}
+                      No QR
+                    {% endif %}
+                  </td>
+                  <td>
+                   <a href="{% url 'download_ticket' booking.id %}" class="btn btn-sm btn-success download-btn" data-id="{{ booking.id }}">Download Ticket</a>
+                  
+                    <a href="{% url 'preview_ticket' booking.id %}" class="btn btn-sm btn-secondary">Preview Ticket</a>
+                  </td>
+                  <td>
+                    {% if booking.downloaded %}
+                      ✅ Downloaded
+                    {% else %}
+                      ⏳ Not Yet
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if booking.download_count == 2 %}
+                      <span class="text-warning fw-bold">Download :2x</span>
+                    {% elif booking.download_count >= 3 %}
+                      <span class="text-danger fw-bold">Download : 3x (Limit Reached)</span>
+                    {% else %}
+                      <span>Download : {{ booking.download_count }}x</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted text-center">No bookings found.</p>
+        {% endif %}
 
-      {% if bookings %}
-        <div class="table-responsive">
-          <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-              <tr>
-                <th>Event</th>
-                <th>Seat</th>
-                <th>Token</th>
-                <th>QR Code</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for booking in bookings %}
-              <tr>
-                <td>{{ booking.event.title }}</td>
-                <td>{{ booking.seat }}</td>
-                <td>{{ booking.token }}</td>
-                <td>
-                  {% if booking.qr_path %}
-                    <img src="{{ booking.qr_path.url }}" alt="QR Code" width="100">
-                  {% else %}
-                    No QR
-                  {% endif %}
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <p class="text-muted text-center">No bookings found.</p>
-      {% endif %}
-
-    </div>
+      </div>
   </div>
 </div>
 
 </body>
 </html>
+<script>
+  document.querySelectorAll('.download-btn').forEach(function(button) {
+    button.addEventListener('click', function() {
+      // Delay refresh to allow download to start
+      setTimeout(function() {
+        location.reload();
+      }, 1500); // 1.5 seconds delay
+    });
+  });
+</script>

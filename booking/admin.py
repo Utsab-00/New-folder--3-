@@ -9,11 +9,11 @@ class BookingAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'token')
 
     def qr_preview(self, obj):
-        if obj.qr_path:
+        if obj.qr_path and hasattr(obj.qr_path, 'url'):
             return format_html('<img src="{}" width="80"/>', obj.qr_path.url)
         return "No QR"
     qr_preview.short_description = "QR Code"
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('title',)
+    list_display = ('title', 'name', 'date', 'location')

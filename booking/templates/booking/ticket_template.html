@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FairBook Ticket</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+        .ticket-box {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            border: 2px dashed #333;
+            background-color: #fff;
+        }
+        .qr-img {
+            max-width: 150px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="ticket-box text-center shadow-sm">
+    <h2 class="mb-3">🎟️ FairBook Ticket</h2>
+    <p><strong>Event:</strong> {{ booking.event.title }}</p>
+    <p><strong>Date:</strong> {{ booking.event.date }}</p>
+    <p><strong>Location:</strong> {{ booking.event.location }}</p>
+    <p><strong>Seat:</strong> {{ booking.seat }}</p>
+    <p><strong>Token:</strong> {{ booking.token }}</p>
+
+    {% if booking.qr_path %}
+        <img src="{{ booking.qr_path.url }}" alt="QR Code" class="qr-img">
+    {% else %}
+        <p class="text-muted">No QR Code Available</p>
+    {% endif %}
+
+    <p class="mt-4 text-muted">Generated on {{ booking.timestamp }}</p>
+    <p class="text-muted">Thank you for booking with FairBook!</p>
+
+</div>
+
+</body>
+</html>

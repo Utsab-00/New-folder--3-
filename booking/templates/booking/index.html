@@ -10,8 +10,15 @@
             <div class="card-header bg-primary text-white">
                 <h4 class="mb-0">🎟️ Book Your Ticket</h4>
             </div>
+            {% if messages %}
+                <div class="mb-3">
+                    {% for message in messages %}
+                        <div class="alert alert-success">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <div class="card-body">
-                <form method="post">
+                <form method="post" action="{% url 'book_ticket' %}">
                     {% csrf_token %}
                     {{ form.user.label_tag }} {{ form.user }}
                     {{ form.event.label_tag }} {{ form.event }}
